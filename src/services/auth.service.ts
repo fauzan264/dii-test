@@ -13,6 +13,15 @@ export const authRegisterService = async ({
 	password: string,
 	role: string
 }) => {
+	const checkRole = await prisma.roles.findUnique({
+		where: { id: role },
+		select: { id: true }
+	});
+
+	if (!checkRole) {
+		throw { message: "Role not found", status: 404, isExpose: true };
+	}
+
 	try {
 		const saltRounds = 10;
 		const hashedPassword = await bcrypt.hash(password, saltRounds);

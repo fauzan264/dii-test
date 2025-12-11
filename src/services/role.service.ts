@@ -199,7 +199,6 @@ export const deleteRoleMenusService = async ({ roleId, menuIds }: { roleId: stri
   const existingMenuIds = existingRoleMenus.map(rm => rm.menuId);
 
 	if (menuIds.length !== existingMenuIds.length) {
-		console.log(existingMenuIds)
 		const missingIds = menuIds.filter(id => !existingMenuIds.includes(id));
 		throw { message: `Some menu IDs are not assigned to this role. Missing IDs: ${missingIds.join(', ')}`, isExpose: true };
 	}

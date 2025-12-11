@@ -8,8 +8,8 @@ export const createMenuService = async ({ name, url, parentId }: { name: string;
   const menu = await prisma.menus.create({
     data: {
       name,
-      url,
-      parentId: parentId ?? null
+      url: url || null,
+      parentId: parentId || null
     },
     omit: {
       updatedAt: true,
@@ -50,8 +50,8 @@ export const updateMenuService = async ({ id, name, url, parentId }: { id: strin
     },
     data: {
       name,
-      url,
-      parentId: parentId ?? null
+      url: url || null,
+      parentId: parentId || null
     },
     omit: {
       deletedAt: true

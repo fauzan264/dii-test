@@ -4,7 +4,11 @@ import { createMenuService, deleteMenuService, detailMenuService, updateMenuServ
 export const createMenuController = async (req: Request, res: Response) => {
   const { name, url, parent_id } = req.body;
 
-	const menu = await createMenuService({ name, url, parentId: parent_id ?? undefined });
+	const menu = await createMenuService({
+		name,
+		url: url !== "" ? url : undefined,
+		parentId: parent_id !== "" ? String(parent_id.trim()) : null
+	});
 
   res.status(201).json({
     success: true,
@@ -17,7 +21,7 @@ export const updateMenuController = async (req: Request, res: Response) => {
   const { name, url, parent_id } = req.body;
 	const { id } = req.params;
 
-	const menu = await updateMenuService({ id: String(id), name, url, parentId: parent_id ?? undefined });
+	const menu = await updateMenuService({ id: String(id), name, url, parentId: parent_id ? String(parent_id) : null });
 
   res.status(200).json({
     success: true,

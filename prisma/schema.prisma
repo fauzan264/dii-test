@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String      @id @default(uuid()) @db.VarChar(36)
+  fullName     String      @map("full_name") @db.VarChar(100)
+  userName     String      @map("username") @db.VarChar(100)
+  passwordHash String      @map("password_hash") @db.VarChar(100)
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime?   @updatedAt @map("updated_at")
+  deletedAt    DateTime?   @map("deleted_at")
+  userRoles    UserRoles[]
+
+  @@map("users")
+}
+
+model UserRoles {
+  id     String @id @default(uuid()) @db.VarChar(36)
+  userId String @map("user_id") @db.VarChar(36)
+  roleId String @map("role_id") @db.VarChar(36)
+
+  user User  @relation(fields: [userId], references: [id])
+  role Roles @relation(fields: [roleId], references: [id])
+
+  @@map("user_roles")
+}
+
+model Roles {
+  id          String      @id @default(uuid()) @db.VarChar(36)
+  name        String      @db.VarChar(100)
+  description String?     @db.Text
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime?   @updatedAt @map("updated_at")
+  deletedAt   DateTime?   @map("deleted_at")
+  userRoles   UserRoles[]
+  roleMenus   RoleMenus[]
+
+  @@map("roles")
+}
+
+model RoleMenus {
+  id     String @id @default(uuid()) @db.VarChar(36)
+  roleId String @map("role_id") @db.VarChar(36)
+  menuId String @map("menu_id") @db.VarChar(36)
+
+  role Roles @relation(fields: [roleId], references: [id])
+  menu Menus @relation(fields: [menuId], references: [id])
+
+  @@map("role_menus")
+}
+
+model Menus {
+  id       String @id @default(uuid()) @db.VarChar(36)
+  name     String @db.VarChar(100)
+  url      String @db.VarChar(100)
+  parentId String @map("parent_id") @db.VarChar(36)
+
+  roleMenus RoleMenus[]
+
+  @@map("menus")
+}

@@ -69,3 +69,71 @@ export const updateMenuService = async ({ id, name, url, parentId }: { id: strin
 
   return menuFormatter;
 };
+
+export const deleteMenuService = async (id: string) => {
+	const checkMenu = await prisma.menus.findUnique({
+		where: {
+			id,
+			deletedAt: null
+		}
+	});
+
+	if (!checkMenu) {
+		throw { message: "Menu not found", status: 404, isExpose: true };
+	}
+
+  await prisma.menus.update({
+    where: {
+      id,
+      deletedAt: null
+    },
+    data: {
+      deletedAt: new Date()
+    }
+  });
+};
+
+export const detailMenuService = async (id: string) => {
+	const menu = await prisma.menus.findUnique({
+		where: {
+			id,
+			deletedAt: null
+		},
+		select: {
+			id: true,
+			name: true,
+			url: true,
+			parent: {
+				select: {
+					id: true,
+					name: true
+				}
+			},
+			children: {
+				select: {
+					id: true,
+					name: true,
+					url: true
+				}
+			},
+			createdAt: true,
+			updatedAt: true
+		}
+	})
+
+	if (!menu) {
+		throw { message: "Menu not found", status: 404, isExpose: true };
+	}
+
+	const menuFormatter = {
+		id: menu.id,
+		name: menu.name,
+		url: menu.url,
+		parent: menu.parent,
+		children: menu.children,
+		created_at: menu.createdAt,
+		updated_at: menu.updatedAt
+	};
+
+	return menuFormatter;
+}

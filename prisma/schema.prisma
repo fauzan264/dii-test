@@ -49,6 +49,7 @@ model Roles {
   roleMenus   RoleMenus[]
 
   @@map("roles")
+  @@index([name])
 }
 
 model RoleMenus {
@@ -63,12 +64,14 @@ model RoleMenus {
 }
 
 model Menus {
-  id       String @id @default(uuid()) @db.VarChar(36)
-  name     String @db.VarChar(100)
-  url      String @db.VarChar(100)
-  parentId String @map("parent_id") @db.VarChar(36)
+  id       String   @id @default(uuid()) @db.VarChar(36)
+  name     String   @db.VarChar(100)
+  url      String?  @db.VarChar(100)
+  parentId String?  @map("parent_id") @db.VarChar(36)
 
   roleMenus RoleMenus[]
 
   @@map("menus")
+  @@index([parentId])
+  @@index([name])
 }

@@ -152,15 +152,20 @@ export const getListMenuService = async () => {
     }
   });
 
-  const menusFormatter = menus.map(menu => ({
-    id: menu.id,
-    name: menu.name,
-    url: menu.url,
-    parent_id: menu.parentId,
-    created_at: menu.createdAt,
-    updated_at: menu.updatedAt
-  }));
+  const buildTree = (parentId: string | null): any[] => {
+    return menus
+      .filter(menu => menu.parentId === parentId)
+      .map(menu => ({
+        id: menu.id,
+        name: menu.name,
+        url: menu.url,
+        children: buildTree(menu.id), 
+        created_at: menu.createdAt,
+        updated_at: menu.updatedAt
+      }));
+  };
+
+  const menusFormatter = buildTree(null);
 
   return menusFormatter;
 };
-

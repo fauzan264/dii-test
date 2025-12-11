@@ -10,13 +10,14 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
   id           String      @id @default(uuid()) @db.VarChar(36)
   fullName     String      @map("full_name") @db.VarChar(100)
-  userName     String      @map("username") @db.VarChar(100)
+  username     String      @db.VarChar(100) @unique()
   passwordHash String      @map("password_hash") @db.VarChar(100)
   createdAt    DateTime    @default(now()) @map("created_at")
   updatedAt    DateTime?   @updatedAt @map("updated_at")

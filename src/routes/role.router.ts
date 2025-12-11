@@ -1,6 +1,6 @@
 import Router from "express";
 import { validateYup } from "../middlewares/validateYup";
-import { createRoleSchema, updateRoleSchema } from "../middlewares/ validators/role.validator";
+import { createRoleSchema, updateRoleSchema } from "../middlewares/validators/role.validator";
 import { createRoleController, deleteRoleController, detailRoleController, updateRoleController } from "../controllers/role.controller";
 
 const roleRouter = Router()

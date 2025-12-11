@@ -65,3 +65,99 @@ export const getUserRolesService = async ({id}: {id: string}) => {
     updated_at: userRole.role.updatedAt
   }));
 }
+
+export const assignRoleToUserService = async ({id, roleId}: {id: string, roleId: string}) => {
+  const checkUser = await prisma.user.findUnique({
+    where: { id: id, deletedAt: null }
+  });
+  
+  if (!checkUser) {
+    throw { message: "User not found", status: 404, isExpose: true };
+  }
+  
+  const checkRole = await prisma.roles.findUnique({
+    where: {
+      id: roleId,
+      deletedAt: null
+    }
+  })
+
+  if (!checkRole) {
+    throw { message: "Role not found", status: 404, isExpose: true };
+  }
+
+  try {
+    const userRole = await prisma.userRoles.create({
+      data: {
+        userId: id,
+        roleId
+      },
+      select: {
+        user: {
+          select: {
+            id: true,
+            fullName: true,
+            username: true
+          }
+        },
+        role: {
+          select: {
+            id: true,
+            name: true,
+          }
+        }
+      }
+    })
+
+    const userRoleFormatter = {
+      id: userRole.user.id,
+      full_name: userRole.user.fullName,
+      username: userRole.user.username,
+      role: {
+        id: userRole.role.id,
+        name: userRole.role.name
+      }
+    }
+  
+    return userRoleFormatter;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const removeRoleFromUserService = async ({id, roleId}: {id: string, roleId: string}) => {
+  const checkUser = await prisma.user.findUnique({
+    where: { id: id, deletedAt: null }
+  });
+  
+  if (!checkUser) {
+    throw { message: "User not found", status: 404, isExpose: true };
+  }
+  
+  const checkRole = await prisma.roles.findUnique({
+    where: {
+      id: roleId,
+      deletedAt: null
+    }
+  })
+
+  if (!checkRole) {
+    throw { message: "Role not found", status: 404, isExpose: true };
+  }
+
+  try {
+    await prisma.userRoles.delete({
+      where: {
+        userId_roleId: {
+          userId: id,
+          roleId: roleId
+        }
+      }
+    });
+  } catch (err: any) {
+    if (err.code === "P2025") {
+      throw { message: "Role assignment not found", status: 404, isExpose: true };
+    }
+    throw { message: "Internal server error", isExpose: true };
+  }
+}

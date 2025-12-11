@@ -28,13 +28,13 @@ model User {
 }
 
 model UserRoles {
-  id     String @id @default(uuid()) @db.VarChar(36)
   userId String @map("user_id") @db.VarChar(36)
   roleId String @map("role_id") @db.VarChar(36)
 
   user User  @relation(fields: [userId], references: [id])
   role Roles @relation(fields: [roleId], references: [id])
 
+  @@id([userId, roleId])
   @@map("user_roles")
 }
 
@@ -53,13 +53,13 @@ model Roles {
 }
 
 model RoleMenus {
-  id     String @id @default(uuid()) @db.VarChar(36)
   roleId String @map("role_id") @db.VarChar(36)
   menuId String @map("menu_id") @db.VarChar(36)
 
   role Roles @relation(fields: [roleId], references: [id])
   menu Menus @relation(fields: [menuId], references: [id])
 
+  @@id([roleId, menuId])
   @@map("role_menus")
 }
 

@@ -9,7 +9,3 @@ export const updateRoleSchema = yup.object().shape({
   name: yup.string().optional(),
   description: yup.string().optional(),
 });
-
-export const deleteRoleSchema = yup.object().shape({
-  id: yup.string().required("ID is required"),
-});

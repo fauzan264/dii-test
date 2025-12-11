@@ -1,6 +1,7 @@
 import { prisma } from "../config/database";
+import { CreateMenuRequest, UpdateMenuRequest } from "../types/menu";
 
-export const createMenuService = async ({ name, url, parentId }: { name: string; url: string; parentId?: string | null }) => {
+export const createMenuService = async ({ name, url, parentId }: CreateMenuRequest) => {
   if (parentId && !url) {
     throw { message: "URL is required when parent is provided", status: 400, isExpose: true};
   }
@@ -28,7 +29,7 @@ export const createMenuService = async ({ name, url, parentId }: { name: string;
   return menuFormatter;
 };
 
-export const updateMenuService = async ({ id, name, url, parentId }: { id: string; name: string; url: string; parentId?: string | null }) => {
+export const updateMenuService = async ({ id, name, url, parentId }: UpdateMenuRequest) => {
   if (parentId && !url) {
     throw { message: "URL is required when parent is provided", status: 400, isExpose: true};
   }

@@ -1,6 +1,7 @@
 import { prisma } from "../config/database"
+import { CreateRoleRequest, RoleMenuRequest, UpdateRoleRequest } from "../types/role";
 
-export const createRoleService = async ({name, description}: {name: string, description: string}) => {
+export const createRoleService = async ({name, description}: CreateRoleRequest) => {
   const role = await prisma.roles.create({
       data: {
           name,
@@ -24,7 +25,7 @@ export const createRoleService = async ({name, description}: {name: string, desc
   return roleFormatter;
 }
 
-export const updateRoleService = async ({id, name, description}: {id: string, name: string, description: string}) => {
+export const updateRoleService = async ({id, name, description}: UpdateRoleRequest) => {
   const checkRole = await prisma.roles.findUnique({
     where: { id, deletedAt: null }
   });
@@ -129,7 +130,7 @@ export const getListRoleService = async () => {
   return rolesFormatter;
 }
 
-export const addRoleMenusService = async ({ roleId, menuIds }: { roleId: string; menuIds: string[] }) => {
+export const addRoleMenusService = async ({ roleId, menuIds }: RoleMenuRequest) => {
 	const checkRole = await prisma.roles.findUnique({
     where: { id: roleId, deletedAt: null }
   });
@@ -175,7 +176,7 @@ export const addRoleMenusService = async ({ roleId, menuIds }: { roleId: string;
   return roleMenusFormatter;
 }
 
-export const deleteRoleMenusService = async ({ roleId, menuIds }: { roleId: string; menuIds: string[] }) => {
+export const deleteRoleMenusService = async ({ roleId, menuIds }: RoleMenuRequest) => {
 	const checkRole = await prisma.roles.findUnique({
     where: { id: roleId, deletedAt: null }
   });

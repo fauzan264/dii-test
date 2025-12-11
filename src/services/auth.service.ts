@@ -1,18 +1,14 @@
 import bcrypt from "bcrypt";
 import { prisma } from "../config/database";
 import { jwtSign } from "../lib/jwt.sign";
+import { AuthLoginRequest, AuthRegisterRequest, AuthSessionRequest } from "../types/auth";
 
 export const authRegisterService = async ({
   fullName,
 	username,
 	password,
 	role
-}: {
-	fullName: string,
-	username: string,
-	password: string,
-	role: string
-}) => {
+}: AuthRegisterRequest) => {
 	const checkRole = await prisma.roles.findUnique({
 		where: { id: role },
 		select: { id: true }
@@ -73,11 +69,7 @@ export const authRegisterService = async ({
 
 export const authLoginService = async ({
 username, password, role
-}: {
-	username: string;
-	password: string;
-	role: string;
-}) => {
+}: AuthLoginRequest) => {
 	const checkUser = await prisma.user.findFirst({
 		where: { 
 			username, userRoles: {
@@ -138,7 +130,7 @@ username, password, role
 	return userFormatter;
 };
 
-export const authSessionService = async ({id, role}: {id: string, role: string}) => {
+export const authSessionService = async ({id, role}: AuthSessionRequest) => {
 	const user = await prisma.user.findFirst({
 		where: { 
 			id, 

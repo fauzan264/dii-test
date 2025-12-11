@@ -1,4 +1,5 @@
 import { prisma } from "../config/database"
+import { AssignRoleToUserRequest, RemoveRoleFromUserRequest } from "../types/user";
 
 export const getListUserService = async () => {
   const users = await prisma.user.findMany({
@@ -66,7 +67,7 @@ export const getUserRolesService = async ({id}: {id: string}) => {
   }));
 }
 
-export const assignRoleToUserService = async ({id, roleId}: {id: string, roleId: string}) => {
+export const assignRoleToUserService = async ({id, roleId}: AssignRoleToUserRequest) => {
   const checkUser = await prisma.user.findUnique({
     where: { id: id, deletedAt: null }
   });
@@ -125,7 +126,7 @@ export const assignRoleToUserService = async ({id, roleId}: {id: string, roleId:
   }
 }
 
-export const removeRoleFromUserService = async ({id, roleId}: {id: string, roleId: string}) => {
+export const removeRoleFromUserService = async ({id, roleId}: RemoveRoleFromUserRequest) => {
   const checkUser = await prisma.user.findUnique({
     where: { id: id, deletedAt: null }
   });

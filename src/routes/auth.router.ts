@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authRegisterController, authLoginController, authSessionController } from "../controllers/auth.controller";
 import { validateYup } from "../middlewares/validateYup";
-import { authRegisterSchema, authLoginSchema } from "../middlewares/ validators/auth.validator";
+import { authRegisterSchema, authLoginSchema } from "../middlewares/validators/auth.validator";
 import { jwtVerify } from "../middlewares/jwt.verify";
 
 const authRouter = Router();

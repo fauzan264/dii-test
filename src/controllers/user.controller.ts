@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { getDetailUserService, getListUserService, getUserRolesService } from "../services/user.service"
+import { assignRoleToUserService, getDetailUserService, getListUserService, getUserRolesService, removeRoleFromUserService } from "../services/user.service"
 
 export const getListUserController = async (req: Request, res: Response) => {
   const users = await getListUserService()
@@ -32,5 +32,27 @@ export const getUserRolesController = async (req: Request, res: Response) => {
     success: true,
     message: "User roles retrieved successfully",
     data: userRoles
+  })
+}
+
+export const assignRoleToUserController = async (req: Request, res: Response) => {
+  const { id, roleId } = req.params;
+  
+  const userRole = await assignRoleToUserService({id: String(id), roleId: String(roleId)});
+  res.status(200).json({
+    success: true,
+    message: "Role assigned successfully",
+    data: userRole
+  })
+}
+
+export const removeRoleFromUserController = async (req: Request, res: Response) => {
+  const { id, roleId } = req.params;
+
+  await removeRoleFromUserService({ id: String(id), roleId: String(roleId) });
+  
+  res.status(200).json({
+    success: true,
+    message: "Role removed successfully"
   })
 }

@@ -137,3 +137,29 @@ export const detailMenuService = async (id: string) => {
 
 	return menuFormatter;
 }
+
+export const getListMenuService = async () => {
+  const menus = await prisma.menus.findMany({
+    where: { deletedAt: null },
+    select: {
+      id: true,
+      name: true,
+      url: true,
+      parentId: true,
+      createdAt: true,
+      updatedAt: true
+    }
+  });
+
+  const menusFormatter = menus.map(menu => ({
+    id: menu.id,
+    name: menu.name,
+    url: menu.url,
+    parent_id: menu.parentId,
+    created_at: menu.createdAt,
+    updated_at: menu.updatedAt
+  }));
+
+  return menusFormatter;
+};
+

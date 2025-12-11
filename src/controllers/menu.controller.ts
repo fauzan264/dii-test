@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createMenuService, deleteMenuService, detailMenuService, updateMenuService } from "../services/menu.service";
+import { createMenuService, deleteMenuService, detailMenuService, getListMenuService, updateMenuService } from "../services/menu.service";
 
 export const createMenuController = async (req: Request, res: Response) => {
   const { name, url, parent_id } = req.body;
@@ -51,4 +51,14 @@ export const detailMenuController = async (req: Request, res: Response) => {
 		message: "Menu retrieved successfully",
 		data: menu
 	})
+}
+
+export const getListMenuController = async (req: Request, res: Response) => {
+  const menus = await getListMenuService();
+  
+  res.status(200).json({
+    success: true,
+    message: "Menus retrieved successfully",
+    data: menus
+  })
 }

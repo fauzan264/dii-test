@@ -14,48 +14,48 @@ export const authRegisterService = async ({
 	role: string
 }) => {
 	try {
-			const saltRounds = 10;
-	const hashedPassword = await bcrypt.hash(password, saltRounds);
+		const saltRounds = 10;
+		const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-	const user = await prisma.user.create({
-		data: {
-			fullName,
-			username,
-			passwordHash: hashedPassword,
-			userRoles: {
-				create: { 
-					roleId: role,
+		const user = await prisma.user.create({
+			data: {
+				fullName,
+				username,
+				passwordHash: hashedPassword,
+				userRoles: {
+					create: { 
+						roleId: role,
+					}
 				}
-			}
-		},
-		select: {
-			id: true,
-			fullName: true,
-			username: true,
-			userRoles: {
-				select: {
-					role: {
-						select: {
-							id: true,
-							name: true
+			},
+			select: {
+				id: true,
+				fullName: true,
+				username: true,
+				userRoles: {
+					select: {
+						role: {
+							select: {
+								id: true,
+								name: true
+							}
 						}
 					}
 				}
 			}
+		})
+
+		const userFormatter = {
+			id: user.id,
+			full_name: user.fullName,
+			username: user.username,
+			role: user.userRoles[0]?.role
 		}
-	})
 
-	const userFormatter = {
-		id: user.id	,
-		full_name: user.fullName,
-		username: user.username,
-		role: user.userRoles[0]?.role
-	}
-
-	return userFormatter;
+		return userFormatter;
 	} catch (err: any) {
 		if (err.code == "P2002") {
-			throw { message: "Username is already registered", isExpose: true };
+			throw { message: "Username is already registered", status: 422, isExpose: true };
 		}
 
 		throw { message: "Internal server error", isExpose: true };
@@ -98,17 +98,17 @@ username, password, role
 	});
 
 	if (!checkUser) {
-		throw { message: "User is not registered or invalid role", isExpose: true };
+		throw { message: "User is not registered or invalid role", status: 404, isExpose: true };
 	}
 
 	const comparePassword = await bcrypt.compare(password, checkUser?.passwordHash);
 
 	if (!comparePassword) {
-		throw { message: "Username or password is incorrect", isExpose: true };
+		throw { message: "Username or password is incorrect", status: 404, isExpose: true };
 	}
 
 	if (!checkUser.userRoles?.length || !checkUser.userRoles?.[0]?.role) {
-		throw { message: "User role is not properly configured", isExpose: true };
+		throw { message: "User role is not properly configured", status: 403, isExpose: true };
 	}
 
 	const userRole = checkUser.userRoles[0].role;
@@ -119,7 +119,7 @@ username, password, role
 	}, process.env.JWT_SECRET_KEY!, { algorithm: "HS256" });
 
 	const userFormatter = {
-		id: checkUser.id	,
+		id: checkUser.id,
 		full_name: checkUser.fullName,
 		username: checkUser.username,
 		role: checkUser.userRoles[0]?.role,
@@ -128,3 +128,46 @@ username, password, role
 	
 	return userFormatter;
 };
+
+export const authSessionService = async ({id, role}: {id: string, role: string}) => {
+	const user = await prisma.user.findFirst({
+		where: { 
+			id, 
+			userRoles: {
+				some: {
+					role: {
+						id: role
+					}
+				}
+			}
+		},
+		select: {
+			id: true,
+			fullName: true,
+			username: true,
+			userRoles: {
+				select: {
+					role: {
+						select: {
+							id: true,
+							name: true,
+						}
+					}
+				}
+			}
+		}
+	});
+
+	if (!user) {
+		throw { message: "User not found", status: 404, isExpose: true };
+	}
+
+	const userFormatter = {
+		id: user.id,
+		full_name: user.fullName,
+		username: user.username,
+		role: user.userRoles[0]?.role
+	};
+
+	return userFormatter;
+}

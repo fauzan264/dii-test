@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { authLoginService, authRegisterService } from "../services/auth.service"
+import { authLoginService, authRegisterService, authSessionService } from "../services/auth.service"
 
 export const authRegisterController = async (req: Request, res: Response) => {
 	const { full_name, username, password, role } = req.body;
@@ -21,6 +21,20 @@ export const authLoginController = async (req: Request, res: Response) => {
 	res.status(200).json({
 		success: true,
 		message: "User logged in successfully",
+		data: user
+	});
+}
+
+export const authSessionController = async (req: Request, res: Response) => {
+	const { user_id, role } = res.locals.payload;
+
+	console.log(user_id);
+	
+	const user = await authSessionService({ id: user_id, role: role.id });
+	
+	res.status(200).json({
+		success: true,
+		message: "Session retrieved successfully",
 		data: user
 	});
 }

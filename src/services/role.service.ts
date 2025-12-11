@@ -156,10 +156,8 @@ export const addRoleMenusService = async ({ roleId, menuIds }: { roleId: string;
 		throw { message: `Already assigned menu IDs: ${existingMenuIds.join(', ')}`, isExpose: true };
 	}
 
-  const newMenuIds = menuIds.filter(id => !existingMenuIds.includes(id));
-
   await prisma.roleMenus.createMany({
-		data: newMenuIds.map((menuId) => ({
+		data: menuIds.map((menuId) => ({
 			roleId,
 			menuId
 		})),
@@ -175,4 +173,43 @@ export const addRoleMenusService = async ({ roleId, menuIds }: { roleId: string;
 	}));
   
   return roleMenusFormatter;
+}
+
+export const deleteRoleMenusService = async ({ roleId, menuIds }: { roleId: string; menuIds: string[] }) => {
+	const checkRole = await prisma.roles.findUnique({
+    where: { id: roleId, deletedAt: null }
+  });
+
+  if (!checkRole) {
+    throw { message: "Role not found", isExpose: true };
+  }
+
+  const checkMenus = await prisma.menus.findMany({
+    where: { id: { in: menuIds }, deletedAt: null }
+  });
+
+  if (checkMenus.length !== menuIds.length) {
+    throw { message: "Some menu IDs not found", isExpose: true };
+  }
+
+  const existingRoleMenus = await prisma.roleMenus.findMany({
+    where: { roleId, menuId: { in: menuIds } }
+  });
+
+  const existingMenuIds = existingRoleMenus.map(rm => rm.menuId);
+
+	if (menuIds.length !== existingMenuIds.length) {
+		console.log(existingMenuIds)
+		const missingIds = menuIds.filter(id => !existingMenuIds.includes(id));
+		throw { message: `Some menu IDs are not assigned to this role. Missing IDs: ${missingIds.join(', ')}`, isExpose: true };
+	}
+	
+	await prisma.roleMenus.deleteMany({
+    where: {
+      roleId,
+      menuId: { in: menuIds }
+    }
+  });
+  
+  return existingMenuIds;
 }

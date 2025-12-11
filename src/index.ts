@@ -14,7 +14,8 @@ app.use(mainRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.log(error);
-  res.status(500).json({
+  const status = error.status || 500;
+  res.status(status).json({
     success: false,
     message: error?.isExpose ? error?.message : "Internal server error",
   });

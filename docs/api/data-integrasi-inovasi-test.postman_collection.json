@@ -1,0 +1,703 @@
+{
+	"info": {
+		"_postman_id": "8deb2c0d-83c3-4117-890a-ec10decdbd91",
+		"name": "Data Integrasi Inovasi Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11479060"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.collectionVariables.set('token', jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\": \"John Doe\",\n    \"username\": \"john\",\n    \"password\": \"password\",\n    \"role\": \"1445f618-8293-4039-90d9-ea74053ca493\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.collectionVariables.set('token', jsonData.data.token);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"john\",\n    \"password\": \"password\",\n    \"role\": \"1445f618-8293-4039-90d9-ea74053ca493\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Session",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/session",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"session"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Role Menus",
+					"item": [
+						{
+							"name": "Add Role Menus",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"menu_ids\": [\n        \"b2aef75c-6f19-4da4-942e-94a60ef14bfb\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/roles/:id/menus",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles",
+										":id",
+										"menus"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1445f618-8293-4039-90d9-ea74053ca493"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Role Menus",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/roles/:id/menus",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles",
+										":id",
+										"menus"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1445f618-8293-4039-90d9-ea74053ca493"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Role Menus",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"menu_ids\": [\n        \"b2aef75c-6f19-4da4-942e-94a60ef14bfb\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/roles/:id/menus",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles",
+										":id",
+										"menus"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1445f618-8293-4039-90d9-ea74053ca493"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create Role",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Customer\",\n    \"description\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/roles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Role",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Admin 3\",\n    \"description\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/roles/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"roles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "e826af36-c78c-4f70-965c-3ccbfc16c97b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Role",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/roles/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"roles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "e07d19cd-fb81-42bc-a053-935959ce24ed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Detail Role",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/roles/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"roles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "e07d19cd-fb81-42bc-a053-935959ce24ed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Role",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/roles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"roles"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Menus",
+			"item": [
+				{
+					"name": "Create Menu",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Admin\",\n    \"url\": \"\",\n    \"parent_id\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/menus",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Menu",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Admin Create test\",\n    \"url\": \"\",\n    \"parent_id\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/menus/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "e0e8188b-ae92-4051-b98f-4c56016124d8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Menu",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/menus/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "e0e8188b-ae92-4051-b98f-4c56016124d8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Detail Menu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/menus/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1ced3b55-1d74-4307-aefd-08b644cbffbd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Menu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/menus",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "User Role",
+					"item": [
+						{
+							"name": "Add Role",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users/:id/roles/:role_id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										":id",
+										"roles",
+										":role_id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1d8eb013-873f-4c65-a4e0-f8ee7717f6fc"
+										},
+										{
+											"key": "role_id",
+											"value": "57ba6cd0-3c87-469e-b699-b090caa8c80a"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User Roles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users/:id/roles",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										":id",
+										"roles"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1d8eb013-873f-4c65-a4e0-f8ee7717f6fc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Role",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users/:id/roles/:role_id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										":id",
+										"roles",
+										":role_id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1d8eb013-873f-4c65-a4e0-f8ee7717f6fc"
+										},
+										{
+											"key": "role_id",
+											"value": "57ba6cd0-3c87-469e-b699-b090caa8c80a"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1d8eb013-873f-4c65-a4e0-f8ee7717f6fc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}

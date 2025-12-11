@@ -23,3 +23,41 @@ export const createRoleService = async ({name, description}: {name: string, desc
 
     return roleFormatter;
 }
+
+export const updateRoleService = async ({id, name, description}: {id: string, name: string, description: string}) => {
+    const checkRole = await prisma.roles.findUnique({
+        where: { id, deletedAt: null }
+    });
+    
+    if (!checkRole) {
+        throw { message: "Role not found", isExpose: true };
+    }
+    
+    const role = await prisma.roles.update({
+        where: {
+            id
+        },
+        data: {
+            name,
+            description,
+            updatedAt: new Date(),
+        },
+        select: {
+            id: true,
+            name: true,
+            description: true,
+            createdAt: true,
+            updatedAt: true
+        }
+    })
+
+    const roleFormatter = {
+        id: role.id,
+        name: role.name,
+        description: role.description,
+        created_at: role.createdAt,
+        updated_at: role.updatedAt
+    }
+
+    return roleFormatter;
+}

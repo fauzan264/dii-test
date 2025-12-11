@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createRoleService, deleteRoleService, detailRoleService, updateRoleService } from "../services/role.service";
+import { addRoleMenusService, createRoleService, deleteRoleMenusService, deleteRoleService, detailRoleService, getListRoleService, updateRoleService } from "../services/role.service";
 
 export const createRoleController = async (req: Request, res: Response) => {
   const { name, description } = req.body;
@@ -47,4 +47,40 @@ export const detailRoleController = async (req: Request, res: Response) => {
 		message: "Role retrieved successfully",
 		data: role
 	})
+}
+
+export const getListRoleController = async (req: Request, res: Response) => {
+	const roles = await getListRoleService();
+	
+	res.status(200).json({
+		success: true,
+		message: "Roles retrieved successfully",
+		data: roles
+	})
+}
+
+export const addRoleMenusController = async (req: Request, res: Response) => {
+	const { menu_ids } = req.body;
+	const { id } = req.params;
+
+	const roleMenus = await addRoleMenusService({ roleId: String(id), menuIds: menu_ids });
+
+  res.status(201).json({
+    success: true,
+    message: "Role menus added successfully",
+    data: roleMenus
+  });
+}
+
+export const deleteRoleMenusController = async (req: Request, res: Response) => {
+	const { menu_ids } = req.body;
+	const { id } = req.params;
+
+	const roleMenus = await deleteRoleMenusService({ roleId: String(id), menuIds: menu_ids });
+
+  res.status(200).json({
+    success: true,
+    message: "Role menus deleted successfully",
+    data: roleMenus
+  });
 }

@@ -28,8 +28,6 @@ export const authLoginController = async (req: Request, res: Response) => {
 export const authSessionController = async (req: Request, res: Response) => {
 	const { user_id, role } = res.locals.payload;
 
-	console.log(user_id);
-	
 	const user = await authSessionService({ id: user_id, role: role.id });
 	
 	res.status(200).json({

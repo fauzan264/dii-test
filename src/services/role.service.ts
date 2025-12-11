@@ -61,3 +61,46 @@ export const updateRoleService = async ({id, name, description}: {id: string, na
 
     return roleFormatter;
 }
+
+export const deleteRoleService = async ({ id }: { id: string }) => {
+    const role = await prisma.roles.findUnique({
+        where: { id, deletedAt: null }
+    });
+
+    if (!role) {
+        throw { message: "Role not found", isExpose: true };
+    }
+
+    await prisma.roles.update({
+        where: { id },
+        data: { deletedAt: new Date() }
+    });
+}
+
+export const detailRoleService = async (id: string) => {
+    const role = await prisma.roles.findUnique({
+        where: { id, deletedAt: null },
+        select: {
+            id: true,
+            name: true,
+            description: true,
+            createdAt: true,
+            updatedAt: true
+        }
+    });
+
+    if (!role) {
+        throw { message: "Role not found", status: 404, isExpose: true };
+    }
+
+    const roleFormatter = {
+        id: role.id,
+        name: role.name,
+        description: role.description,
+        created_at: role.createdAt,
+        updated_at: role.updatedAt
+    };
+
+    return roleFormatter;
+}
+

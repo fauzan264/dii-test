@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { addRoleMenusService, createRoleService, deleteRoleMenusService, deleteRoleService, detailRoleService, getListRoleService, updateRoleService } from "../services/role.service";
+import { addRoleMenusService, createRoleService, deleteRoleMenusService, deleteRoleService, detailRoleService, getListRoleMenuService, getListRoleService, updateRoleService } from "../services/role.service";
 
 export const createRoleController = async (req: Request, res: Response) => {
   const { name, description } = req.body;
@@ -81,6 +81,18 @@ export const deleteRoleMenusController = async (req: Request, res: Response) => 
   res.status(200).json({
     success: true,
     message: "Role menus deleted successfully",
+    data: roleMenus
+  });
+}
+
+export const getListRoleMenuController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  
+  const roleMenus = await getListRoleMenuService(String(id));
+  
+  res.status(200).json({
+    success: true,
+    message: "Role menus retrieved successfully",
     data: roleMenus
   });
 }

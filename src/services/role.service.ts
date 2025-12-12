@@ -213,3 +213,34 @@ export const deleteRoleMenusService = async ({ roleId, menuIds }: RoleMenuReques
   
   return existingMenuIds;
 }
+
+export const getListRoleMenuService = async (roleId: string) => {
+  const roleMenus = await prisma.roleMenus.findMany({
+    where: { roleId },
+    select: {
+      menu: {
+        select: {
+					id: true,
+          name: true,
+					url: true,
+					parentId: true,
+        }
+      }
+    }
+  });
+
+	const buildTree = (parentId: string | null): any[] => {
+    return roleMenus
+      .filter(menu => menu.menu.parentId === parentId)
+      .map(menu => ({
+        id: menu.menu.id,
+        name: menu.menu.name,
+        url: menu.menu.url,
+        children: buildTree(menu.menu.id), 
+      }));
+  };
+
+  const menusFormatter = buildTree(null);
+
+  return menusFormatter;
+}

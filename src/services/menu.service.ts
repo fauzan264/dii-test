@@ -149,6 +149,9 @@ export const getListMenuService = async () => {
       parentId: true,
       createdAt: true,
       updatedAt: true
+    },
+    orderBy: {
+      name: "asc"
     }
   });
 
